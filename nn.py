@@ -56,7 +56,7 @@ def test(x, wx, wh, bx, bh):
 
 # 训练过程
 def train(x, y_correct, wx, wh, bx, bh):
-    alpha = 0.05
+    alpha = 0.5
 
     # 正向
     h_ = np.matmul(wx.T, x) + bx
@@ -71,7 +71,7 @@ def train(x, y_correct, wx, wh, bx, bh):
     delta_bh = alpha*e
     bh = bh+delta_bh
 
-    E = add(add(h, (1-h)), wh.reshape([3, 1]))
+    E = add(add(h, (1-h)), wh.reshape([2, 1]))
     delta_wx = alpha*e*np.matmul(x, E.T)
     wx = wx+delta_wx
     delta_bx = alpha*e*E
@@ -84,15 +84,15 @@ if __name__ == "__main__":
     data = [[0, 0], [0, 1], [1, 0], [1, 1]]
     label = [0, 1, 1, 0]
 
-    wx = create_w(2, 3)
-    wh = create_w(1, 3)
-    bx = create_w(3, 1)
+    wx = create_w(2, 2)
+    wh = create_w(1, 2)
+    bx = create_w(2, 1)
     bh = create_w(1, 1)
 
-    for i in range(1000):
+    for i in range(10000):
         x = random.randint(0, 3)
-        wx, wh, bx, bh = train(np.array(data[x]).reshape([2,1]), label[x], wx, wh, bx, bh)
+        wx, wh, bx, bh = train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh, bx, bh)
 
     for i in range(4):
         print("x=", data[i])
-        print("y=", test(np.array(data[i]).reshape([2,1]), wx, wh, bx, bh))
+        print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh, bx, bh))
