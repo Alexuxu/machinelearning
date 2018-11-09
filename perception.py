@@ -1,7 +1,7 @@
 import random
 
 
-def sign(x):
+def sgn(x):
     if x > 10:
         return 1
     else:
@@ -14,7 +14,7 @@ def test(w, b, x):
         y = y + i*j
     y = y + b
 
-    return sign(y)
+    return sgn(y)
 
 
 def train(w, b, x, y_correct):
@@ -23,7 +23,7 @@ def train(w, b, x, y_correct):
     for i, j in zip(x, w):
         y = y + i*j
     y = y + b
-    e = y_correct - sign(y)
+    e = y_correct - sgn(y)
 
     delta_y = list()
     for index, i in enumerate(w):

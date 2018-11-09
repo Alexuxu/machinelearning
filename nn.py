@@ -10,6 +10,7 @@ def add(x1, x2):
         y.append(t)
     return np.array(y)
 
+
 def sigmoid(x):
     try:
         x = float(x)
@@ -64,6 +65,9 @@ def train(x, y_correct, wx, wh, bx, bh):
     y_ = np.matmul(wh, h) + bh
     y = sigmoid(y_)
 
+    loss = (y - y_correct)
+    print(loss)
+
     # 反向
     e = y*(1-y)*(y-y_correct)
     delta_wh = alpha*e*wh
@@ -89,7 +93,7 @@ if __name__ == "__main__":
     bx = create_w(2, 1)
     bh = create_w(1, 1)
 
-    for i in range(10000):
+    for i in range(10):
         x = random.randint(0, 3)
         wx, wh, bx, bh = train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh, bx, bh)
 

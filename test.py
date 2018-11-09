@@ -1,5 +1,4 @@
-import numpy as np
-import nn
 import random
+import perception2 as p2
 
-print(nn.sigmoid())
+print(p2.create_mat(1,1))
