@@ -327,10 +327,10 @@ def import_data(filename, reverse=False):
     if reverse:
         data = np.array(data).T.tolist()
         result = list()
-        for i in data[1:]:
+        result.append(data[-1])
+        for i in data[:-1]:
             result.append(i)
-        result.append(data[0])
-        data = result
+        data = np.array(result).T.tolist()
 
     return data
 
