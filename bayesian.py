@@ -32,7 +32,6 @@ def bayes(data):
         classified_possi[i] = possi_list
 
 
-
 def import_data(filename, reverse=False):
     f = open(filename, 'r', encoding='utf-8')
     data_str = f.read()
