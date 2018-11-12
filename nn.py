@@ -1,6 +1,7 @@
 import random
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def add(x1, x2):
@@ -57,7 +58,7 @@ def test(x, wx, wh, bx, bh):
 
 # 训练过程
 def train(x, y_correct, wx, wh, bx, bh):
-    alpha = 0.5
+    alpha = 0.3
 
     # 正向
     h_ = np.matmul(wx.T, x) + bx
@@ -65,17 +66,14 @@ def train(x, y_correct, wx, wh, bx, bh):
     y_ = np.matmul(wh, h) + bh
     y = sigmoid(y_)
 
-    loss = (y - y_correct)
-    print(loss)
-
     # 反向
-    e = y*(1-y)*(y-y_correct)
+    e = -(y_*(1-y_)*(y-y_correct))
     delta_wh = alpha*e*wh
     wh = wh+delta_wh
     delta_bh = alpha*e
     bh = bh+delta_bh
 
-    E = add(add(h, (1-h)), wh.reshape([2, 1]))
+    E = add(add(h_, (1-h_)), wh.reshape([2, 1]))
     delta_wx = alpha*e*np.matmul(x, E.T)
     wx = wx+delta_wx
     delta_bx = alpha*e*E
@@ -93,10 +91,14 @@ if __name__ == "__main__":
     bx = create_w(2, 1)
     bh = create_w(1, 1)
 
-    for i in range(10):
+    for i in range(100):
         x = random.randint(0, 3)
         wx, wh, bx, bh = train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh, bx, bh)
 
     for i in range(4):
         print("x=", data[i])
         print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh, bx, bh))
+    print("w1=", wx)
+    print("w2=", wh)
+    print("b1=", bx)
+    print("b2=", bh)
