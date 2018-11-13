@@ -57,48 +57,36 @@ def test(x, wx, wh, bx, bh):
 
 
 # 训练过程
-def train(x, y_correct, wx, wh, bx, bh):
-    alpha = 0.3
+def train(x, y_correct, wx, wh):
+    alpha = 0.5
 
     # 正向
-    h_ = np.matmul(wx.T, x) + bx
+    x = np.vstack((x, np.array([1])))
+    h_ = np.matmul(wx, x)
     h = sigmoid(h_)
-    y_ = np.matmul(wh, h) + bh
+    h = np.vstack((h, np.array([1])))
+    y_ = np.matmul(wh, h)
     y = sigmoid(y_)
 
-    # 反向
-    e = -(y_*(1-y_)*(y-y_correct))
-    delta_wh = alpha*e*wh
-    wh = wh+delta_wh
-    delta_bh = alpha*e
-    bh = bh+delta_bh
-
-    E = add(add(h_, (1-h_)), wh.reshape([2, 1]))
-    delta_wx = alpha*e*np.matmul(x, E.T)
-    wx = wx+delta_wx
-    delta_bx = alpha*e*E
-    bx = bx+delta_bx
-
-    return wx, wh, bx, bh
+    e = (y_correct - y) * y * (1-y)
+    delta_wh = np.dot(-abs(alpha * e), wh)
+    wh = wh + delta_wh
+    delta_wx =
 
 
 if __name__ == "__main__":
     data = [[0, 0], [0, 1], [1, 0], [1, 1]]
     label = [0, 1, 1, 0]
 
-    wx = create_w(2, 2)
-    wh = create_w(1, 2)
-    bx = create_w(2, 1)
-    bh = create_w(1, 1)
+    wx = create_w(2, 3)
+    wh = create_w(1, 3)
 
     for i in range(100):
         x = random.randint(0, 3)
-        wx, wh, bx, bh = train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh, bx, bh)
+        wx, wh= train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh)
 
     for i in range(4):
         print("x=", data[i])
-        print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh, bx, bh))
+        print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh))
     print("w1=", wx)
     print("w2=", wh)
-    print("b1=", bx)
-    print("b2=", bh)
