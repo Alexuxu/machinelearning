@@ -88,7 +88,7 @@ def train(x, y_correct, wx, wh, i):
 
 if __name__ == "__main__":
     data = [[0, 0], [0, 1], [1, 0], [1, 1]]
-    label = [1, 0, 0, 1]
+    label = [0, 1, 1, 0]
 
     wx = create_w(2, 3)
     wh = create_w(1, 3)
@@ -100,5 +100,7 @@ if __name__ == "__main__":
     for i in range(4):
         print("x=", data[i])
         print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh))
-    plt.plot(plotx,ploty)
+    print("wx=", wx)
+    print("wh=", wh)
+    plt.plot(plotx, ploty)
     plt.show()
