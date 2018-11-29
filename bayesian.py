@@ -30,6 +30,7 @@ def bayes(data):
             possi_list.append(calcu_possi(j))
 
         classified_possi[i] = possi_list
+    print(classified_possi)
 
 
 def import_data(filename, reverse=False):

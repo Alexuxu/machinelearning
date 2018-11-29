@@ -2,9 +2,9 @@ import random
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-
 plotx = []
 ploty = []
+
 
 def sgn(x):
     if x>=0.5:
@@ -71,7 +71,7 @@ def train(x, y_correct, wx, wh, i):
     h = np.vstack((h, np.array([1])))
     y_ = np.matmul(wh, h)
     y = sigmoid(y_)
-    if i%100 == 0:
+    if i % 100 == 0:
         plotx.append(len(plotx)+1)
         ploty.append((y_correct - y)**2)
 
@@ -93,12 +93,12 @@ if __name__ == "__main__":
     wx = create_w(2, 3)
     wh = create_w(1, 3)
 
-    for i in range(10000):
+    for i in range(5000):
         x = random.randint(0, 3)
         wx, wh = train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh, i)
 
     for i in range(4):
         print("x=", data[i])
         print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh))
-    plt.plot(plotx,ploty)
+    plt.plot(plotx, ploty)
     plt.show()
