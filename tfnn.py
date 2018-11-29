@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-import random
+import r
 
 
 class xor():

@@ -1,4 +1,4 @@
-import random
+import r
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,7 +44,7 @@ def create_w(m, n):
         t = list()
         w.append(t)
         for j in range(n):
-            t.append(0.002*random.randint(0, 1000)-1)
+            t.append(0.002 * r.randint(0, 1000) - 1)
     return np.array(w)
 
 
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     wh = create_w(1, 3)
 
     for i in range(10000):
-        x = random.randint(0, 3)
+        x = r.randint(0, 3)
         wx, wh = train(np.array(data[x]).reshape([2, 1]), label[x], wx, wh, i)
 
     for i in range(4):

@@ -1,4 +1,4 @@
-import random
+import r
 
 
 def sgn(x):
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     b = 0.5
 
     for i in range(1000):
-        rand = random.randint(0, 3)
+        rand = r.randint(0, 3)
         w, b = train(w, b, x[rand], y[rand])
 
     for i in range(4):

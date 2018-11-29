@@ -340,7 +340,8 @@ if __name__ == "__main__":
     dic = {0: "花萼长度", 1: "花萼宽度", 2: "花瓣长度", 3: "花瓣宽度"}
     dic2 = {0: "色泽", 1: "根蒂", 2: "敲声", 3: "纹理", 4: "脐部", 5: "触感"}
     dic3 = {0: "色泽", 1: "根蒂", 2: "敲声", 3: "纹理", 4: "脐部", 5: "触感", 6: "密度", 7: "含糖率"}
-    data = import_data("watermelon2.txt")
-    tree = DecisionTree(dic3)
+    dic4 = {0: "长度", 1: "直径", 2: "高度", 3: "全重", 4: "去壳重", 5: "脏器重", 6: "壳重", 7: "环数"}
+    data = import_data("abalone.txt")
+    tree = DecisionTree(dic4)
     tree.create_tree(data)
     print("用时", time.time() - t, "秒")
