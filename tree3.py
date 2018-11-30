@@ -327,9 +327,9 @@ def import_data(filename, reverse=False):
     if reverse:
         data = np.array(data).T.tolist()
         result = list()
-        result.append(data[-1])
-        for i in data[:-1]:
+        for i in data[1:]:
             result.append(i)
+        result.append(data[0])
         data = np.array(result).T.tolist()
 
     return data
@@ -341,7 +341,7 @@ if __name__ == "__main__":
     dic2 = {0: "色泽", 1: "根蒂", 2: "敲声", 3: "纹理", 4: "脐部", 5: "触感"}
     dic3 = {0: "色泽", 1: "根蒂", 2: "敲声", 3: "纹理", 4: "脐部", 5: "触感", 6: "密度", 7: "含糖率"}
     dic4 = {0: "长度", 1: "直径", 2: "高度", 3: "全重", 4: "去壳重", 5: "脏器重", 6: "壳重", 7: "环数"}
-    data = import_data("abalone.txt")
+    data = import_data("abalone.txt", True)
     tree = DecisionTree(dic4)
     tree.create_tree(data)
     print("用时", time.time() - t, "秒")

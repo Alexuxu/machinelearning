@@ -1,5 +1,6 @@
 import numpy as np
-
+import math
+                      
 
 def calcu_possi(data):
     sum = len(data)
@@ -61,6 +62,28 @@ def bayes(data):
     print(final_dict)
 
 
+# 获取正态分布的概率
+def normal_possi(mu, sigma, x):
+    part1 = 1/(sigma * math.sqrt(2 * math.pi))
+    part2 = math.exp(-(x - mu)**2/(2*(sigma**2)))
+    return part1 * part2
+
+
+# 判断数据是离散还是连续，连续返回True，离散返回False
+def get_con_or_dis(data, n):
+    t_set = set()
+    for i in data:
+        try:
+            t = float(i)
+        except ValueError:
+            return False
+        else:
+            t_set.add(i)
+            if len(t_set)>n:
+                return True
+    return False
+
+
 def import_data(filename, reverse=False):
     f = open(filename, 'r', encoding='utf-8')
     data_str = f.read()
@@ -73,9 +96,9 @@ def import_data(filename, reverse=False):
     if reverse:
         data = np.array(data).T.tolist()
         result = list()
-        result.append(data[-1])
-        for i in data[:-1]:
+        for i in data[1:]:
             result.append(i)
+        result.append(data[0])
         data = np.array(result).T.tolist()
 
     return data

@@ -1,0 +1,145 @@
+import numpy as np
+import math
+
+
+def calcu_possi(data):
+    sum = len(data)
+    result = dict()
+    for i in data:
+        if i not in result:
+            result[i] = 1 / sum
+        else:
+            result[i] = result[i] + 1 / sum
+    return result
+
+
+# 获取正态分布的概率
+def normal_possi(mu, sigma, x):
+    part1 = 1/(sigma * math.sqrt(2 * math.pi))
+    part2 = math.exp(-(x - mu)**2/(2*(sigma**2)))
+    return part1 * part2
+
+
+# 判断数据是离散还是连续，连续返回True，离散返回False
+def get_con_or_dis(data, n):
+    t_set = set()
+    for i in data:
+        try:
+            t = float(i)
+        except ValueError:
+            return False
+        else:
+            t_set.add(i)
+            if len(t_set)>n:
+                return True
+    return False
+
+
+def import_data(filename, reverse=False):
+    f = open(filename, 'r', encoding='utf-8')
+    data_str = f.read()
+    data_t = data_str.split('\n')
+    data = list()
+    for index in data_t:
+        t = index.split(',')
+        data.append(t)
+
+    if reverse:
+        data = np.array(data).T.tolist()
+        result = list()
+        for i in data[1:]:
+            result.append(i)
+        result.append(data[0])
+        data = np.array(result).T.tolist()
+
+    return data
+
+
+class BayesClassifier:
+
+    def __init__(self, data):
+        self.data = data
+        t_data = np.array(data).T.tolist()
+        data_dic = dict()       # 用于储存数据连续or离散，连续为True，离散为False
+        for index, i in enumerate(t_data[:-1]):
+            data_dic[index] = get_con_or_dis(i, 5)
+
+        self.con_data = list()
+        self.dis_data = list()
+        for i in data_dic:
+            if data_dic[i]:
+                self.con_data.append(t_data[i])
+            else:
+                self.dis_data.append(t_data[i])
+        self.con_data.append(t_data[-1])
+        self.con_data = np.array(self.con_data).T.tolist()
+        self.dis_data.append(t_data[-1])
+        self.dis_data = np.array(self.dis_data).T.tolist()
+
+    # 计算离散值的先验概率
+    def calculate_possibility(self):
+        # 将数据分类
+        classified_data = dict()
+        for i in self.dis_data:
+            if i[-1] not in classified_data:
+                t = list()
+                t.append(i)
+                classified_data[i[-1]] = t
+            else:
+                classified_data[i[-1]].append(i)
+
+        # 将数据依次求先验概率
+        classified_possi = dict()
+        for i in classified_data:
+            t = np.array(classified_data[i]).T.tolist()
+            possi_dict = dict()
+            for j in t[:-1]:
+                possi_dict = dict(possi_dict, **calcu_possi(j))
+
+            classified_possi[i] = possi_dict
+
+        # 求类别的先验概率
+        clas_possi = calcu_possi(np.array(self.dis_data).T.tolist()[-1])
+
+        # 储存所有属性可能取值
+        values = set()
+        for i in self.dis_data:
+            for j in i[:-1]:
+                if j not in values:
+                    values.add(j)
+
+        # 最终结果
+        self.dis_dict = dict()
+        for value in values:
+            t_dict = dict()
+            for clas, dic in zip(classified_possi.keys(), classified_possi.values()):
+                if clas not in t_dict:
+                    if value in dic:
+                        t_dict[clas] = dic[value] * clas_possi[clas]
+                    else:
+                        t_dict[clas] = 0
+
+            possi_sum = sum(t_dict.values())
+            for i in t_dict:
+                t_dict[i] = (t_dict[i] + 1) / (possi_sum + len(clas_possi))
+            self.dis_dict[value] = t_dict
+
+    # 假设连续值符合正态分布，计算正态分布的参数
+    def calculate_parameter(self):
+        t_data = np.array(self.con_data).T.tolist()
+        for i, index in enumerate(t_data[:-1]):
+            for j, _ in enumerate(index):
+                t_data[i][j] = float(t_data[i][j])
+
+        self.con_dict = list()
+        for index, i in enumerate(t_data[:-1]):
+            t = dict()
+            t['mu'] = np.mean(t_data[index])
+            t['sigma'] = np.std(t_data[index])
+            self.con_dict.append(t)
+
+
+if __name__ == "__main__":
+    data = import_data("watermelon2.txt")
+    bayes = BayesClassifier(data)
+    bayes.calculate_parameter()
