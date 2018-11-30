@@ -1,4 +1,4 @@
-import r
+import random
 import math
 import numpy as np
 
@@ -10,7 +10,7 @@ def create_w(m, n):
         t = list()
         w.append(t)
         for j in range(n):
-            t.append(0.002 * r.randint(0, 1000) - 1)
+            t.append(0.002 * random.randint(0, 1000) - 1)
     return np.array(w)
 
 
