@@ -56,9 +56,9 @@ def bayes(data):
 
         possi_sum = sum(t_dict.values())
         for i in t_dict:
-            t_dict[i] = t_dict[i]/possi_sum
+            t_dict[i] = (t_dict[i]+1)/(possi_sum+len(clas_possi))
         final_dict[value] = t_dict
-    return final_dict
+    print(final_dict)
 
 
 def import_data(filename, reverse=False):
