@@ -58,7 +58,7 @@ def bayes(data):
         for i in t_dict:
             t_dict[i] = t_dict[i]/possi_sum
         final_dict[value] = t_dict
-    print(final_dict)
+    return final_dict
 
 
 def import_data(filename, reverse=False):
