@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import random
 import math
 
 
@@ -14,10 +16,8 @@ def calcu_possi(data):
 
 
 # 获取正态分布的概率
-def normal_possi(mu, sigma, x):
-    part1 = 1/(sigma * math.sqrt(2 * math.pi))
-    part2 = math.exp(-(x - mu)**2/(2*(sigma**2)))
-    return part1 * part2
+def normal_possi(x, mu, sigma):
+    return np.exp(-((x - mu) ** 2) / (2 * sigma ** 2)) / (sigma * np.sqrt(2 * np.pi))
 
 
 # 判断数据是离散还是连续，连续返回True，离散返回False
@@ -59,17 +59,24 @@ class BayesClassifier:
 
     def __init__(self, data):
         self.data = data
+
         t_data = np.array(data).T.tolist()
-        data_dic = dict()       # 用于储存数据连续or离散，连续为True，离散为False
+        self.data_dis_or_con = dict()       # 用于储存数据连续or离散，连续为True，离散为False
         for index, i in enumerate(t_data[:-1]):
-            data_dic[index] = get_con_or_dis(i, 5)
+            self.data_dis_or_con[index] = get_con_or_dis(i, 5)
 
         self.con_data = list()
         self.dis_data = list()
 
+        # 储存数据的种类
+        self.data_class = set()
+        for i in t_data[-1]:
+            if i not in self.data_class:
+                self.data_class.add(i)
+
         # 将数据分为连续和离散
-        for i in data_dic:
-            if data_dic[i]:
+        for i in self.data_dis_or_con:
+            if self.data_dis_or_con[i]:
                 self.con_data.append(t_data[i])
             else:
                 self.dis_data.append(t_data[i])
@@ -127,7 +134,6 @@ class BayesClassifier:
             for i in t_dict:
                 t_dict[i] = (t_dict[i] + 1) / (possi_sum + len(clas_possi))
             self.dis_dict[value] = t_dict
-        print(self.dis_dict)
 
     # 假设连续值符合正态分布，计算正态分布的参数
     def calculate_parameter(self):
@@ -155,15 +161,30 @@ class BayesClassifier:
                 if index not in self.con_dict:
                     self.con_dict[index] = dict()
                 self.con_dict[index].update(out_dict)
-        print(self.con_dict)
 
+    def test(self, data):
+        max_type = str()
+        max_possi = 0
+        for clas in self.data_class:
+            possi_sum = 1
+            dis_index = 0
+            for index, i in enumerate(data):
+                if self.data_dis_or_con[index]:
+                    possi_sum *= normal_possi(float(i), self.con_dict[dis_index][clas]['mu'], self.con_dict[dis_index][clas]['sigma'])
+                else:
+                    possi_sum *= self.dis_dict[i][clas]
+            if possi_sum > max_possi:
+                max_possi = possi_sum
+                max_type = clas
 
-    def test(self):
-        pass
+        return max_type
 
 
 if __name__ == "__main__":
-    data = import_data("watermelon2.txt")
+    data = import_data("iris.txt")
     bayes = BayesClassifier(data)
     bayes.calculate_possibility()
     bayes.calculate_parameter()
+
+    for i in data:
+        print(bayes.test(i[:-1]))

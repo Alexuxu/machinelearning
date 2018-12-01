@@ -1,7 +1,9 @@
 import numpy as np
 
+
 def getdistance(data):
     pass
+
 
 def import_data(filename, reverse=False):
     f = open(filename, 'r', encoding='utf-8')
