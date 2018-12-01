@@ -1,8 +1,10 @@
 import numpy as np
 
 
-def getdistance(data):
-    pass
+def getdistance(data1, data2):
+    distance = 0
+    for i, j in zip(data1, data2):
+        pass
 
 
 def import_data(filename, reverse=False):
