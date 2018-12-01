@@ -66,11 +66,15 @@ class BayesClassifier:
 
         self.con_data = list()
         self.dis_data = list()
+
+        # 将数据分为连续和离散
         for i in data_dic:
             if data_dic[i]:
                 self.con_data.append(t_data[i])
             else:
                 self.dis_data.append(t_data[i])
+
+        # 数据中加入类别，求转置
         self.con_data.append(t_data[-1])
         self.con_data = np.array(self.con_data).T.tolist()
         self.dis_data.append(t_data[-1])
@@ -123,23 +127,43 @@ class BayesClassifier:
             for i in t_dict:
                 t_dict[i] = (t_dict[i] + 1) / (possi_sum + len(clas_possi))
             self.dis_dict[value] = t_dict
+        print(self.dis_dict)
 
     # 假设连续值符合正态分布，计算正态分布的参数
     def calculate_parameter(self):
-        t_data = np.array(self.con_data).T.tolist()
-        for i, index in enumerate(t_data[:-1]):
-            for j, _ in enumerate(index):
-                t_data[i][j] = float(t_data[i][j])
+        # 将数据分类
+        classified_data = dict()
+        for i in self.con_data:
+            if i[-1] not in classified_data:
+                t = list()
+                t.append(i)
+                classified_data[i[-1]] = t
+            else:
+                classified_data[i[-1]].append(i)
 
-        self.con_dict = list()
-        for index, i in enumerate(t_data[:-1]):
-            t = dict()
-            t['mu'] = np.mean(t_data[index])
-            t['sigma'] = np.std(t_data[index])
-            self.con_dict.append(t)
+        # 计算不同分类的正态分布参数
+        self.con_dict = dict()
+        for i in classified_data:
+            t_data = classified_data[i]
+            t_data = np.array(t_data).T.tolist()
+            for index, j in enumerate(t_data[:-1]):
+                out_dict = dict()           # 外层字典
+                in_dict = dict()            # 内层字典
+                in_dict["mu"] = np.mean(list(map(float, j)))
+                in_dict["sigma"] = np.std(list(map(float, j)))
+                out_dict[i] = in_dict
+                if index not in self.con_dict:
+                    self.con_dict[index] = dict()
+                self.con_dict[index].update(out_dict)
+        print(self.con_dict)
+
+
+    def test(self):
+        pass
 
 
 if __name__ == "__main__":
     data = import_data("watermelon2.txt")
     bayes = BayesClassifier(data)
+    bayes.calculate_possibility()
     bayes.calculate_parameter()
