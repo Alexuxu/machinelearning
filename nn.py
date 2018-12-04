@@ -100,7 +100,5 @@ if __name__ == "__main__":
     for i in range(4):
         print("x=", data[i])
         print("y=", test(np.array(data[i]).reshape([2, 1]), wx, wh))
-    print("wx=", wx)
-    print("wh=", wh)
     plt.plot(plotx, ploty)
     plt.show()

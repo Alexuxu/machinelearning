@@ -14,22 +14,3 @@ def create_w(m, n):
     return np.array(w)
 
 
-class Lay:
-    def __init__(self, num):
-        self.num = num
-        self.data = create_w(num, 1)
-        self.next = 0
-
-    def set_next(self, next):
-        self.next = next
-
-
-class Connection:
-    def __init__(self, input, output):
-        self
-
-
-class NetWork:
-    def __init__(self, structure):
-        for i in structure:
-            pass
