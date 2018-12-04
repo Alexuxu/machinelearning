@@ -134,6 +134,7 @@ class BayesClassifier:
             for i in t_dict:
                 t_dict[i] = (t_dict[i] + 1) / (possi_sum + len(clas_possi))
             self.dis_dict[value] = t_dict
+        print(self.dis_dict)
 
     # 假设连续值符合正态分布，计算正态分布的参数
     def calculate_parameter(self):
@@ -161,6 +162,7 @@ class BayesClassifier:
                 if index not in self.con_dict:
                     self.con_dict[index] = dict()
                 self.con_dict[index].update(out_dict)
+        print(self.con_dict)
 
     def test(self, data):
         max_type = str()
@@ -181,7 +183,7 @@ class BayesClassifier:
 
 
 if __name__ == "__main__":
-    data = import_data("iris.txt")
+    data = import_data("watermelon.txt")
     bayes = BayesClassifier(data)
     bayes.calculate_possibility()
     bayes.calculate_parameter()
